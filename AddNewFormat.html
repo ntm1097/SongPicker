@@ -26,5 +26,23 @@
         </div>
     </div>
 </body>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+  
+  const firebaseConfig = {
+    apiKey: "AIzaSyBOX7iUIR-GDnfpY0wQ_oOegJUYOJTM9LE",
+    authDomain: "hpbc-songpicker.firebaseapp.com",
+    databaseURL: "https://hpbc-songpicker-default-rtdb.firebaseio.com",
+    projectId: "hpbc-songpicker",
+    storageBucket: "hpbc-songpicker.firebasestorage.app",
+    messagingSenderId: "677978452426",
+    appId: "1:677978452426:web:b81f46a94cfe0380295f33"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+
+  const db = firebase.firestore();
+</script>
 <script src="index.js"></script>
 </html>
