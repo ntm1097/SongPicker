@@ -40,9 +40,9 @@ nav {
   display: flex;
   width: 100%;
   max-width: 1380px;
-  justify-content: space-evenly;
+  justify-content: space-around;
   align-items: center;
-  margin: 0 auto;
+  padding: 0 68px;
 }
 
 .lists {
@@ -62,9 +62,16 @@ nav {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80vh;
+  padding-top: 86px;
   margin: 0 auto;
   font-size: 32px;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 1400px;
+}
+
+.previous__formats .use__record {
+  padding: 0;
 }
 
 .most__used {
@@ -80,10 +87,133 @@ nav {
 }
 
 .record__title {
-  padding: 28px;
+  padding: 20px;
+  text-align: center;
+  width: 100%;
+  max-width: 200px;
+  font-size: 28px;
+  font-weight: 400;
+  margin: 0 auto;
 }
 
 .number__order {
   margin-top: 12px;
   font-size: 20px;
+}
+
+/* Previous Formats */ 
+
+.search__filter {
+  display: flex;
+  padding: 48px;
+  align-items: center;
+}
+
+.search__bar {
+  margin: 0 auto;
+  border: none;
+  width: 100%;
+  max-width: 300px;
+}
+
+.search__text {
+  width: 100%;
+  margin-left: 78px;
+  padding: 4px;
+  border-radius: 10px;
+  border: solid 2px rgb(121, 217, 232);
+  opacity: 0.6;
+  cursor: pointer;
+  outline: none;
+  transition: ease-in-out 400ms;
+}
+
+.search__text:hover {
+  transform: scale(1.03);
+  opacity: 1;
+}
+
+#sortMenu {
+  cursor: pointer;
+  border-radius: 8px;
+  border: solid 3px rgb(188, 230, 236)
+}
+
+.Previous__week {
+  margin: 68px;
+  padding: 24px;
+  border: solid 4px rgb(188, 230, 236);
+  width: 100%;
+  max-width: 300px;
+}
+
+/*  New format */ 
+
+.new__format {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+}
+
+.song__list {
+  padding: 8px 20px 8px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.input__date {
+  border-radius: 30px;
+  outline: none;
+  border: solid 2px rgb(112, 193, 206);
+  padding: 20px;
+  margin-top: 98px;
+  font-size: 24px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.song__input {
+  padding: 10px 0 ;
+  margin-bottom: 8px;
+  width: 100%;
+  border: none;
+  border-bottom: solid 1px rgb(0, 0, 0);
+   outline: none;
+   font-size: 24px;
+   cursor: pointer;
+}
+
+.song__list li::before {
+  display: inline-block;
+  width: 2em;
+  color: #000000;          
+  font-size: 20px;      
+  vertical-align: middle;
+}
+
+.song__list li:nth-child(1)::before { content: "1. "; }
+.song__list li:nth-child(2)::before { content: "2. "; }
+.song__list li:nth-child(3)::before { content: "3. "; }
+.song__list li:nth-child(4)::before { content: "4. "; }
+.song__list li:nth-child(5)::before { content: "5. "; }
+
+.buttons {
+  display: flex;
+  width: 100%;
+  max-width: 500px;
+  justify-content: center;
+}
+
+.btn {
+  background: none;
+  border: solid 2px rgb(112, 193, 206);
+  border-radius: 15px;
+  font-size: 24px;
+  padding: 10px;
+  width: 100%;
+  max-width: 200px;
+  margin: 0 16px;
+  cursor: pointer;
 }
