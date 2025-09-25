@@ -20,57 +20,40 @@
             </select>
     </div>  
     </div>
-    <div class="use__record">
-      <div class="Previous__week">
-        <h2 class="record__title">Sept 21st</h2>
-        <li class="number__order">1. Your grace is enough</li>
-        <li class="number__order">2. The Lords prayer</li>
-        <li class="number__order">3. Death was arrested</li>
-        <li class="number__order">4. There is a fountain</li>
-        <li class="number__order">5. I will wait for you</li>
-      </div>
-      <div class="Previous__week">
-        <h2 class="record__title">Sept 28th</h2>
-        <li class="number__order">1.</li>
-        <li class="number__order">2.</li>
-        <li class="number__order">3.</li>
-        <li class="number__order">4.</li>
-        <li class="number__order">5.</li>
-      </div>
-      <div class="Previous__week">
-        <h2 class="record__title">Oct 5th</h2>
-        <li class="number__order">1.</li>
-        <li class="number__order">2.</li>
-        <li class="number__order">3.</li>
-        <li class="number__order">4.</li>
-        <li class="number__order">5.</li>
-      </div>
-      <div class="Previous__week">
-        <h2 class="record__title">Oct 5th</h2>
-        <li class="number__order">1.</li>
-        <li class="number__order">2.</li>
-        <li class="number__order">3.</li>
-        <li class="number__order">4.</li>
-        <li class="number__order">5.</li>
-      </div>
-      <div class="Previous__week">
-        <h2 class="record__title">Oct 5th</h2>
-        <li class="number__order">1.</li>
-        <li class="number__order">2.</li>
-        <li class="number__order">3.</li>
-        <li class="number__order">4.</li>
-        <li class="number__order">5.</li>
-      </div>
-      <div class="Previous__week">
-        <h2 class="record__title">Oct 5th</h2>
-        <li class="number__order">1.</li>
-        <li class="number__order">2.</li>
-        <li class="number__order">3.</li>
-        <li class="number__order">4.</li>
-        <li class="number__order">5.</li>
-      </div>
+    <div class="use__record" id="weeksContainer">
+      
     </div>
   </body>
+  <script>
+document.addEventListener("DOMContentLoaded", async function () {
+  const weeksContainer = document.getElementById("weeksContainer");
+  if (!weeksContainer) return;
+
+  try {
+    const snapshot = await db.collection("weeks").orderBy("date", "desc").get();
+    weeksContainer.innerHTML = ""; // Clear any static content
+
+    snapshot.forEach(doc => {
+      const week = doc.data();
+      // Format date if needed
+      const weekDiv = document.createElement("div");
+      weekDiv.className = "Previous__week";
+      weekDiv.innerHTML = `
+        <h2 class="record__title">${week.date}</h2>
+        ${week.songs.map((song, i) => `<li class="number__order">${i + 1}. ${song}</li>`).join("")}
+      `;
+      weeksContainer.appendChild(weekDiv);
+    });
+
+    if (snapshot.empty) {
+      weeksContainer.innerHTML = "<p>No previous weeks found.</p>";
+    }
+  } catch (error) {
+    weeksContainer.innerHTML = "<p>Error loading previous weeks.</p>";
+    console.error("Error fetching weeks:", error);
+  }
+});
+</script>
   
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 
