@@ -72,4 +72,12 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+  function fileUpload() {
+    document
+      .getElementById("upload__btn")
+      .addEventListener("click", function () {
+        document.getElementById("file__upload").click();
+      });
+  }
+  fileUpload();
 });

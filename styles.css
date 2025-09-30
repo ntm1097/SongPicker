@@ -218,8 +218,8 @@ nav {
   background: none;
   border: solid 2px rgb(112, 193, 206);
   border-radius: 15px;
-  font-size: 24px;
-  padding: 10px;
+  font-size: 20px;
+  padding: 4px;
   width: 100%;
   max-width: 200px;
   margin: 0 16px;
@@ -230,4 +230,8 @@ nav {
 .btn:hover {
   transform: scale(1.03);
   border-color: rgb(89, 138, 244);
+}
+
+#file__upload {
+  display: none;
 }

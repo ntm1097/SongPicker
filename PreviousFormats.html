@@ -34,17 +34,22 @@ document.addEventListener("DOMContentLoaded", async function () {
     weeksContainer.innerHTML = ""; // Clear any static content
 
     snapshot.forEach(doc => {
-      const week = doc.data();
-      // Format date if needed
-      const weekDiv = document.createElement("div");
-      weekDiv.className = "Previous__week";
-      weekDiv.innerHTML = `
-        <h2 class="record__title">${week.date}</h2>
-        ${week.songs.map((song, i) => `<li class="number__order">${i + 1}. ${song}</li>`).join("")}
-      `;
-      weeksContainer.appendChild(weekDiv);
-    });
-
+  const week = doc.data();
+  const weekDiv = document.createElement("div");
+  weekDiv.className = "Previous__week";
+  // Format the date as "Sep 29, 2025"
+  const dateObj = new Date(week.date);
+  const formattedDate = dateObj.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric"
+  });
+  weekDiv.innerHTML = `
+    <h2 class="record__title">${formattedDate}</h2>
+    ${week.songs.map((song, i) => `<li class="number__order">${i + 1}. ${song}</li>`).join("")}
+  `;
+  weeksContainer.appendChild(weekDiv);
+});
     if (snapshot.empty) {
       weeksContainer.innerHTML = "<p>No previous weeks found.</p>";
     }
