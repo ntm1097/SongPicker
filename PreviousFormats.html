@@ -9,77 +9,129 @@
   </head>
   <body class="previous__formats">
     <div class="search__filter">
-        <div class="search__bar">
-              <input class="search__text" type="text">
-          </div>
-        <div class="sort__menu">
-            <label for="sortMenu">Sort by:</label>
-            <select id="sortMenu">
-                <option value="date">Most Recent</option>
-                <option value="name">Oldest Set</option>
-            </select>
-    </div>  
+      <div class="search__bar">
+        <input class="search__text" type="text" />
+      </div>
+      <div class="sort__menu">
+        <label for="sortMenu">Sort by:</label>
+        <select id="sortMenu">
+          <option value="date">Most Recent</option>
+          <option value="name">Oldest Set</option>
+        </select>
+      </div>
     </div>
-    <div class="use__record" id="weeksContainer">
-      
-    </div>
+    <div class="use__record" id="weeksContainer"></div>
   </body>
   <script>
-document.addEventListener("DOMContentLoaded", async function () {
-  const weeksContainer = document.getElementById("weeksContainer");
-  if (!weeksContainer) return;
+    document.addEventListener("DOMContentLoaded", async function () {
+      const weeksContainer = document.getElementById("weeksContainer");
+      if (!weeksContainer) return;
 
-  try {
-    const snapshot = await db.collection("weeks").orderBy("date", "desc").get();
-    weeksContainer.innerHTML = ""; // Clear any static content
+      try {
+        const snapshot = await db
+          .collection("weeks")
+          .orderBy("date", "desc")
+          .get();
+        weeksContainer.innerHTML = ""; // Clear any static content
 
-    snapshot.forEach(doc => {
-  const week = doc.data();
-  const weekDiv = document.createElement("div");
-  weekDiv.className = "Previous__week";
-  // Format the date as "Sep 29, 2025"
-  const dateObj = new Date(week.date);
-  const formattedDate = dateObj.toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric"
-  });
-  weekDiv.innerHTML = `
+        snapshot.forEach((doc) => {
+          const week = doc.data();
+          const weekDiv = document.createElement("div");
+          weekDiv.className = "Previous__week";
+
+          // Debug: Log the date value to see what we're working with
+          console.log("Date value:", week.date, "Type:", typeof week.date);
+
+          // Handle different date formats
+          let dateObj;
+          let formattedDate;
+
+          try {
+            if (
+              week.date &&
+              typeof week.date === "object" &&
+              week.date.toDate
+            ) {
+              // Firestore Timestamp
+              dateObj = week.date.toDate();
+            } else if (
+              week.date &&
+              typeof week.date === "object" &&
+              week.date.seconds
+            ) {
+              // Firestore Timestamp object with seconds
+              dateObj = new Date(week.date.seconds * 1000);
+            } else if (week.date && typeof week.date === "string") {
+              // String format - remove ordinal suffixes (st, nd, rd, th)
+              const cleanedDate = week.date.replace(
+                /(\d+)(st|nd|rd|th)/g,
+                "$1"
+              );
+              dateObj = new Date(cleanedDate);
+            } else if (week.date) {
+              // Other format
+              dateObj = new Date(week.date);
+            } else {
+              // No date found
+              dateObj = new Date();
+            }
+
+            // Validate and format the date
+            if (isNaN(dateObj.getTime())) {
+              formattedDate = `Unknown Date (${week.date})`;
+            } else {
+              formattedDate = dateObj.toLocaleDateString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              });
+            }
+          } catch (error) {
+            console.error("Date parsing error:", error, "for date:", week.date);
+            formattedDate = `Date Error (${week.date})`;
+          }
+
+          weekDiv.innerHTML = `
     <h2 class="record__title">${formattedDate}</h2>
-    ${week.songs.map((song, i) => `<li class="number__order">${i + 1}. ${song}</li>`).join("")}
-  `;
-  weeksContainer.appendChild(weekDiv);
-});
-    if (snapshot.empty) {
-      weeksContainer.innerHTML = "<p>No previous weeks found.</p>";
+    ${
+      week.songs && week.songs.length > 0
+        ? week.songs
+            .map(
+              (song, i) => `<li class="number__order">${i + 1}. ${song}</li>`
+            )
+            .join("")
+        : "<p>No songs found</p>"
     }
-  } catch (error) {
-    weeksContainer.innerHTML = "<p>Error loading previous weeks.</p>";
-    console.error("Error fetching weeks:", error);
-  }
-});
-</script>
-  
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  `;
+          weeksContainer.appendChild(weekDiv);
+        });
+        if (snapshot.empty) {
+          weeksContainer.innerHTML = "<p>No previous weeks found.</p>";
+        }
+      } catch (error) {
+        weeksContainer.innerHTML = "<p>Error loading previous weeks.</p>";
+        console.error("Error fetching weeks:", error);
+      }
+    });
+  </script>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script>
-  
-  const firebaseConfig = {
-    apiKey: "AIzaSyBOX7iUIR-GDnfpY0wQ_oOegJUYOJTM9LE",
-    authDomain: "hpbc-songpicker.firebaseapp.com",
-    databaseURL: "https://hpbc-songpicker-default-rtdb.firebaseio.com",
-    projectId: "hpbc-songpicker",
-    storageBucket: "hpbc-songpicker.firebasestorage.app",
-    messagingSenderId: "677978452426",
-    appId: "1:677978452426:web:b81f46a94cfe0380295f33"
-  };
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 
-  
-  firebase.initializeApp(firebaseConfig);
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBOX7iUIR-GDnfpY0wQ_oOegJUYOJTM9LE",
+      authDomain: "hpbc-songpicker.firebaseapp.com",
+      databaseURL: "https://hpbc-songpicker-default-rtdb.firebaseio.com",
+      projectId: "hpbc-songpicker",
+      storageBucket: "hpbc-songpicker.firebasestorage.app",
+      messagingSenderId: "677978452426",
+      appId: "1:677978452426:web:b81f46a94cfe0380295f33",
+    };
 
- 
-  const db = firebase.firestore();
-</script>
+    firebase.initializeApp(firebaseConfig);
+
+    const db = firebase.firestore();
+  </script>
   <script src="index.js"></script>
 </html>

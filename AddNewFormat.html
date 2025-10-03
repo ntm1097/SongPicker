@@ -1,50 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="/Assets/favicon.ico" type="image/x-icon">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="/Assets/favicon.ico" type="image/x-icon" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
     <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-
-        <div class="new__format">
-                <input class="input__date" type="date">
-            <div class="song__list">
-                <li><input type="text" class="song__input" placeholder="Enter Song Here"></li>
-                <li><input type="text" class="song__input" placeholder="Enter Song Here"></li>
-                <li><input type="text" class="song__input" placeholder="Enter Song Here"></li>
-                <li><input type="text" class="song__input" placeholder="Enter Song Here"></li>
-                <li><input type="text" class="song__input" placeholder="Enter Song Here"></li>
-            </div>
-            <div class="buttons">
-                <button class="btn">Auto Generate</button>
-                <button class="btn">Submit</button>
-                <input type="file" id="file__upload" accept=".xlsx,.xls,.docx,.doc">
-                <button id="upload__btn" class="btn">Upload File</button>
-            </div>
+      <div class="new__format">
+        <input class="input__date" type="date" />
+        <div class="song__list">
+          <li>
+            <input
+              type="text"
+              class="song__input"
+              placeholder="Enter Song Here"
+            />
+          </li>
+          <li>
+            <input
+              type="text"
+              class="song__input"
+              placeholder="Enter Song Here"
+            />
+          </li>
+          <li>
+            <input
+              type="text"
+              class="song__input"
+              placeholder="Enter Song Here"
+            />
+          </li>
+          <li>
+            <input
+              type="text"
+              class="song__input"
+              placeholder="Enter Song Here"
+            />
+          </li>
+          <li>
+            <input
+              type="text"
+              class="song__input"
+              placeholder="Enter Song Here"
+            />
+          </li>
         </div>
+        <div class="buttons">
+          <button class="btn">Auto Generate</button>
+          <button class="btn">Submit</button>
+          <input type="file" id="file__upload" accept=".xlsx,.xls,.docx,.doc" />
+          <button id="upload__btn" class="btn">Upload File</button>
+        </div>
+      </div>
     </div>
-</body>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script>
-  
-  const firebaseConfig = {
-    apiKey: "AIzaSyBOX7iUIR-GDnfpY0wQ_oOegJUYOJTM9LE",
-    authDomain: "hpbc-songpicker.firebaseapp.com",
-    databaseURL: "https://hpbc-songpicker-default-rtdb.firebaseio.com",
-    projectId: "hpbc-songpicker",
-    storageBucket: "hpbc-songpicker.firebasestorage.app",
-    messagingSenderId: "677978452426",
-    appId: "1:677978452426:web:b81f46a94cfe0380295f33"
-  };
 
-  firebase.initializeApp(firebaseConfig);
+    <!-- Full-screen file preview overlay -->
+    <div id="file__preview__overlay" class="file__preview__overlay" style="display: none;">
+      <div class="file__preview__container">
+        <div class="buttons">
+            <button id="use__file__data" class="btn">Use This Data</button>
+            <button id="close__preview__btn" class="btn">Cancel</button>
+          </div>
+        <div class="file__preview__header">
+          <h2>File Preview</h2>
+          <button id="close__preview" class="close__btn">&times;</button>
+        </div>
+        <div class="new__format">
+          <input id="preview__date" class="input__date" type="date" readonly />
+          <div class="song__list" id="preview__song__list">
+            <!-- Songs will be populated here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBOX7iUIR-GDnfpY0wQ_oOegJUYOJTM9LE",
+      authDomain: "hpbc-songpicker.firebaseapp.com",
+      databaseURL: "https://hpbc-songpicker-default-rtdb.firebaseio.com",
+      projectId: "hpbc-songpicker",
+      storageBucket: "hpbc-songpicker.firebasestorage.app",
+      messagingSenderId: "677978452426",
+      appId: "1:677978452426:web:b81f46a94cfe0380295f33",
+    };
 
-  const db = firebase.firestore();
-</script>
-<script src="index.js"></script>
+    firebase.initializeApp(firebaseConfig);
+
+    const db = firebase.firestore();
+  </script>
+  <script src="index.js"></script>
 </html>
