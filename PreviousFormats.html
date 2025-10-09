@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="icon" href="/Assets/favicon.ico" type="image/x-icon" />
-    <title>Document</title>
+    <title>Clearly Praise</title>
   </head>
   <body class="previous__formats">
     <div class="search__filter">
@@ -27,87 +27,111 @@
       const weeksContainer = document.getElementById("weeksContainer");
       if (!weeksContainer) return;
 
+      // Helper function to parse various date formats into a proper Date object
+      function parseStoredDate(dateValue) {
+        if (!dateValue) return new Date(0); // Very old date for null values
+
+        try {
+          // Handle Firestore Timestamp
+          if (typeof dateValue === "object" && dateValue.toDate) {
+            return dateValue.toDate();
+          } else if (typeof dateValue === "object" && dateValue.seconds) {
+            return new Date(dateValue.seconds * 1000);
+          }
+
+          // Handle string dates
+          if (typeof dateValue === "string") {
+            // Remove ordinal suffixes (st, nd, rd, th) for parsing
+            let cleanedDate = dateValue.replace(/(\d+)(st|nd|rd|th)/g, "$1");
+
+            // Try parsing the cleaned string
+            let parsedDate = new Date(cleanedDate);
+
+            // If that fails, try some common formats
+            if (isNaN(parsedDate.getTime())) {
+              // Try "Month Day, Year" format
+              const monthDayYear = cleanedDate.match(
+                /^(\w+)\s+(\d{1,2}),?\s+(\d{4})$/
+              );
+              if (monthDayYear) {
+                parsedDate = new Date(
+                  `${monthDayYear[1]} ${monthDayYear[2]}, ${monthDayYear[3]}`
+                );
+              }
+            }
+
+            return isNaN(parsedDate.getTime()) ? new Date(0) : parsedDate;
+          }
+
+          // Try direct conversion
+          return new Date(dateValue);
+        } catch (error) {
+          console.error("Date parsing error:", error, "for date:", dateValue);
+          return new Date(0); // Return very old date for error cases
+        }
+      }
+
       try {
-        const snapshot = await db
-          .collection("weeks")
-          .orderBy("date", "desc")
-          .get();
+        // Fetch all documents without ordering (we'll sort on client side)
+        const snapshot = await db.collection("weeks").get();
         weeksContainer.innerHTML = ""; // Clear any static content
 
+        if (snapshot.empty) {
+          weeksContainer.innerHTML = "<p>No previous weeks found.</p>";
+          return;
+        }
+
+        // Convert to array and add parsed dates for sorting
+        const weeks = [];
         snapshot.forEach((doc) => {
-          const week = doc.data();
+          const weekData = doc.data();
+          const parsedDate = parseStoredDate(weekData.date);
+
+          weeks.push({
+            id: doc.id,
+            data: weekData,
+            sortDate: parsedDate,
+          });
+        });
+
+        // Sort by date (most recent first)
+        weeks.sort((a, b) => b.sortDate.getTime() - a.sortDate.getTime());
+
+        // Display sorted weeks
+        weeks.forEach((week) => {
           const weekDiv = document.createElement("div");
           weekDiv.className = "Previous__week";
 
-          // Debug: Log the date value to see what we're working with
-          console.log("Date value:", week.date, "Type:", typeof week.date);
-
-          // Handle different date formats
-          let dateObj;
+          // Format the date for display
           let formattedDate;
-
           try {
-            if (
-              week.date &&
-              typeof week.date === "object" &&
-              week.date.toDate
-            ) {
-              // Firestore Timestamp
-              dateObj = week.date.toDate();
-            } else if (
-              week.date &&
-              typeof week.date === "object" &&
-              week.date.seconds
-            ) {
-              // Firestore Timestamp object with seconds
-              dateObj = new Date(week.date.seconds * 1000);
-            } else if (week.date && typeof week.date === "string") {
-              // String format - remove ordinal suffixes (st, nd, rd, th)
-              const cleanedDate = week.date.replace(
-                /(\d+)(st|nd|rd|th)/g,
-                "$1"
-              );
-              dateObj = new Date(cleanedDate);
-            } else if (week.date) {
-              // Other format
-              dateObj = new Date(week.date);
+            if (week.sortDate.getTime() === 0) {
+              formattedDate = `Unknown Date (${week.data.date})`;
             } else {
-              // No date found
-              dateObj = new Date();
-            }
-
-            // Validate and format the date
-            if (isNaN(dateObj.getTime())) {
-              formattedDate = `Unknown Date (${week.date})`;
-            } else {
-              formattedDate = dateObj.toLocaleDateString("en-US", {
+              formattedDate = week.sortDate.toLocaleDateString("en-US", {
                 month: "long",
                 day: "numeric",
                 year: "numeric",
               });
             }
           } catch (error) {
-            console.error("Date parsing error:", error, "for date:", week.date);
-            formattedDate = `Date Error (${week.date})`;
+            formattedDate = `Date Error (${week.data.date})`;
           }
 
           weekDiv.innerHTML = `
-    <h2 class="record__title">${formattedDate}</h2>
-    ${
-      week.songs && week.songs.length > 0
-        ? week.songs
-            .map(
-              (song, i) => `<li class="number__order">${i + 1}. ${song}</li>`
-            )
-            .join("")
-        : "<p>No songs found</p>"
-    }
-  `;
+            <h2 class="record__title">${formattedDate}</h2>
+            ${
+              week.data.songs && week.data.songs.length > 0
+                ? week.data.songs
+                    .map(
+                      (song, i) => `<li class="number__order">${i + 1}. ${song}</li>`
+                    )
+                    .join("")
+                : "<p>No songs found</p>"
+            }
+          `;
           weeksContainer.appendChild(weekDiv);
         });
-        if (snapshot.empty) {
-          weeksContainer.innerHTML = "<p>No previous weeks found.</p>";
-        }
       } catch (error) {
         weeksContainer.innerHTML = "<p>Error loading previous weeks.</p>";
         console.error("Error fetching weeks:", error);

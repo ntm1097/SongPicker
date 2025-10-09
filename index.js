@@ -352,10 +352,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Date patterns - updated to handle dates without spaces and include "sept"
     const datePatterns = [
-      // Original patterns with spaces (now including "sept")
       /^(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec|january|february|march|april|june|july|august|september|october|november|december)\s+(\d{1,2})(st|nd|rd|th)?/i,
       /^(\d{1,2})(st|nd|rd|th)?\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec|january|february|march|april|june|july|august|september|october|november|december)/i,
-      // New patterns without spaces (like "Nov17th", now including "sept")
+      // New patterns without spaces)
       /^(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec|january|february|march|april|june|july|august|september|october|november|december)(\d{1,2})(st|nd|rd|th)?$/i,
       /^(\d{1,2})(st|nd|rd|th)?(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec|january|february|march|april|june|july|august|september|october|november)$/i,
       // Standard numeric formats
@@ -379,10 +378,10 @@ document.addEventListener("DOMContentLoaded", function () {
         if (answer && answer.toLowerCase() === "no" && !!date) {
           try {
             // Check if this week already exists
-            const existingWeekQuery = await db
-              .collection("weeks")
-              .where("date", "==", date)
-              .get();
+            const existingWeekQuery = await db.collection("weeks").add({
+              date: firebase.firestore.Timestamp.fromDate(new Date(date)),
+              songs: songs,
+            });
 
             if (!existingWeekQuery.empty) {
               alert("This week already exists in the database!");
@@ -390,7 +389,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             await db.collection("weeks").add({
-              date: date,
+              date: firebase.firestore.Timestamp.fromDate(new Date(date)),
               songs: songs,
             });
 
@@ -443,7 +442,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         await db.collection("weeks").add({
-          date: date,
+          date: firebase.firestore.Timestamp.fromDate(new Date(date)),
           songs: songs,
         });
 

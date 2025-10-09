@@ -90,22 +90,47 @@ nav {
 }
 
 .record__title {
-  padding: 0px;
+  padding: 20px 0px;
   text-align: center;
   width: 100%;
   max-width: 200px;
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 400;
   margin: 0 auto;
 }
 
 .number__order {
   margin-top: 12px;
-  font-size: 14px;
+  font-size: 18px;
+  display: flex;
+  justify-content: flex-start;
   text-align: left;
 }
 
 /* Previous Formats */
+
+.skeletons{
+  display: grid;
+  flex-wrap: wrap;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.skeleton__use__record {
+  padding-top: 86px;
+  font-size: 32px;
+  width: 100%;
+  max-width: 1400px;
+}
+
+#skeleton__weeks__Container {
+  margin: 24px;
+  padding: 24px;
+  width: 100%;
+  max-width: 330px;
+  min-height: 330px;
+  border: solid 4px rgb(188, 230, 236);
+  border-radius: 50px;
+}
 
 .search__filter {
   display: flex;
@@ -165,7 +190,7 @@ nav {
   margin-top: 8px;
   flex-shrink: 0;
   width: 100%;
-  text-align: center;
+  text-align: left;
 }
 
 /*  New format */
