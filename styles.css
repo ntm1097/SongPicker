@@ -35,7 +35,7 @@ nav {
 
 .logo {
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(30, 30, 30, 0.664);
+  box-shadow: 0px 4px 4px rgba(30, 30, 30, 0.559);
   border-radius: 50px;
 }
 
@@ -52,7 +52,26 @@ nav {
 .lists {
   font-size: 28px;
   cursor: pointer;
+  position: relative;
+  display: inline-block;
+  transition: color 0.4s ease;
 }
+
+.lists::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #ffffff;
+  transition: width 0.4s ease;
+}
+
+.lists:hover::after {
+  width: 100%;
+}
+
 
 /* Main section */
 
@@ -398,8 +417,126 @@ nav {
   .navlinks {
     font-size: 12px;
     padding: 0;
-    display: flex;
-    justify-content: flex-end;
   }
-  
+  .most__used, .least__picked {
+    margin: 0;
+    width: 100%;
+    max-width: 450px;
+  }
+   .most__used, .least__picked {
+    margin-bottom: 24px;
+   }
+   .record__title {
+    font-size: 22px;
+   }
+   .Previous__week {
+    width: 100%;
+    max-width: 300px;
+   }
+   .number__order {
+    font-size: 16px;
+   }
+}
+
+@media (max-width: 600px ) {
+  .lists {
+    font-size: 20px;
+  }
+  .logo {
+    width: 65px;
+  }
+  .input__date {
+    padding: 14px;
+    font-size: 18px;
+  }
+  .song__list {
+    max-width: 450px;
+    margin-top: 12px;
+  }
+  .song__input {
+    font-size:  18px;
+  }
+  .buttons {
+    margin-top: 24px;
+  }
+  .btn {
+    padding: 8px;
+    font-size: 18px;
+  }
+  .search__filter {
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+  }
+  .search__text {
+    margin:  0 0 16px 0;
+  }
+  .Previous__week {
+    max-width: 230px;
+  }
+  .record__title {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lists {
+    font-size: 14px;
+  }
+  .navlinks {
+    margin-left: 12px;
+  }
+  .logo {
+    width: 50px;
+  }
+  .use__record {
+    padding-top: 24px;
+  }
+  #home .container {
+    height: 120vh;
+  }
+  .most__used, .least__picked {
+    max-width: 370px;
+    padding: 20px;
+    margin: 12px;
+  }
+  .number__order {
+    font-size: 14px;
+  }
+  .song__list li::before {
+    font-size: 14px;
+    width: 1em;
+  }
+  .input__date {
+    margin: 0;
+    padding: 14px;
+    font-size: 14px;
+  }
+  .song__list {
+    max-width: 450px;
+    margin-top: 32px;
+  }
+  .song__input {
+    font-size:  14px;
+  }
+  .buttons {
+    margin-top: 44px;
+  }
+  .btn {
+    padding: 8px;
+    font-size: 14px;
+  }
+  .search__filter {
+    padding: 24px;
+  }
+  .search__text {
+    margin:  0 0 16px 0;
+  }
+  .Previous__week {
+    min-width: 300px;
+    margin: 12px;
+  }
+  .record__title {
+    font-size: 18px;
+  }
 }
