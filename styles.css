@@ -22,7 +22,7 @@ li {
 /* Navbar */
 
 nav {
-  background-color: rgb(188, 230, 236);
+  background-color: rgb(0, 72, 132);
 }
 
 .nav__wrapper {
@@ -35,6 +35,8 @@ nav {
 
 .logo {
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(30, 30, 30, 0.664);
+  border-radius: 50px;
 }
 
 .navlinks {
@@ -44,6 +46,7 @@ nav {
   justify-content: space-around;
   align-items: center;
   padding: 0 68px;
+  color: #ffffff;
 }
 
 .lists {
@@ -78,15 +81,15 @@ nav {
 .most__used {
   margin-right: 68px;
   padding: 44px;
-  border: solid 4px rgb(188, 230, 236);
-  border-radius: 50px;
+  border: solid 2px rgb(0, 72, 132);
+  border-radius: 30px;
 }
 
 .least__picked {
   margin-left: 68px;
   padding: 44px;
-  border: solid 4px rgb(188, 230, 236);
-  border-radius: 50px;
+  border: solid 2px rgb(0, 72, 132);
+  border-radius: 30px;
 }
 
 .record__title {
@@ -153,18 +156,18 @@ nav {
   border: solid 2px rgb(121, 217, 232);
   cursor: pointer;
   outline: none;
-  transition: all ease-in-out 400ms;
+  transition: all ease-in-out 285ms;
 }
 
 .search__text:hover {
   transform: scale(1.03);
-  border-color: rgb(89, 138, 244);
+  border-color: rgb(0, 72, 132);
 }
 
 #sortMenu {
   cursor: pointer;
-  border-radius: 8px;
-  border: solid 3px rgb(188, 230, 236);
+  border-radius: 4px;
+  border: solid 3px rgb(0, 72, 132);
 }
 
 .Previous__week {
@@ -173,13 +176,14 @@ nav {
   width: 100%;
   max-width: 330px;
   min-height: 330px;
-  border: solid 4px rgb(188, 230, 236);
-  border-radius: 50px;
+  border: solid 2px rgb(0, 72, 132);
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.276);
 }
 
 .Previous__week .record__title {
@@ -206,11 +210,11 @@ nav {
 .song__list {
   padding: 8px 20px 8px;
   width: 100%;
-  max-width: 500px;
+  max-width: 700px;
 }
 
 .input__date {
-  border-radius: 30px;
+  border-radius: 18px;
   outline: none;
   border: solid 2px rgb(112, 193, 206);
   padding: 20px;
@@ -218,12 +222,12 @@ nav {
   font-size: 24px;
   text-align: center;
   cursor: pointer;
-  transition: all ease 400ms;
+  transition: all ease 285ms;
 }
 
 .input__date:hover {
   transform: scale(1.03);
-  border-color: rgb(89, 138, 244);
+  border-color: rgb(0, 72, 132);
 }
 
 .song__input {
@@ -278,12 +282,12 @@ nav {
   max-width: 200px;
   margin: 0 16px;
   cursor: pointer;
-  transition: all ease 400ms;
+  transition: all ease 285ms;
 }
 
 .btn:hover {
   transform: scale(1.03);
-  border-color: rgb(89, 138, 244);
+  border-color: rgb(0, 72, 132);
 }
 
 #file__upload {
@@ -348,4 +352,54 @@ nav {
 
 #preview__date[readonly] {
   background-color: #f5f5f5;
+}
+
+/* Autocomplete dropdown styles */
+.autocomplete__dropdown {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.autocomplete__dropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.autocomplete__dropdown li {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s;
+}
+
+.autocomplete__dropdown li:last-child {
+  border-bottom: none;
+}
+
+.autocomplete__dropdown li:hover,
+.autocomplete__dropdown li.active {
+  background-color: #f0f0f0;
+}
+
+.autocomplete__dropdown li.active {
+  background-color: #e6f3ff;
+}
+
+
+@media (max-width: 768px) {
+  .navlinks {
+    font-size: 12px;
+    padding: 0;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
 }

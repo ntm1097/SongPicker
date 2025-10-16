@@ -44,7 +44,7 @@
             // Remove ordinal suffixes (st, nd, rd, th) for parsing
             let cleanedDate = dateValue.replace(/(\d+)(st|nd|rd|th)/g, "$1");
 
-            // Try parsing the cleaned string
+            // Try parsing the cleaned string directly
             let parsedDate = new Date(cleanedDate);
 
             // If that fails, try some common formats
@@ -59,6 +59,9 @@
                 );
               }
             }
+
+            // Debug logging
+            console.log("Parsing date:", dateValue, "->", parsedDate);
 
             return isNaN(parsedDate.getTime()) ? new Date(0) : parsedDate;
           }
@@ -124,7 +127,8 @@
               week.data.songs && week.data.songs.length > 0
                 ? week.data.songs
                     .map(
-                      (song, i) => `<li class="number__order">${i + 1}. ${song}</li>`
+                      (song, i) =>
+                        `<li class="number__order">${i + 1}. ${song}</li>`
                     )
                     .join("")
                 : "<p>No songs found</p>"

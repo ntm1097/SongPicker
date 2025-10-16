@@ -78,6 +78,11 @@
         </div>
       </div>
     </div>
+
+    <!-- Autocomplete dropdown container -->
+    <div id="autocomplete__dropdown" class="autocomplete__dropdown" style="display: none;">
+      <ul id="autocomplete__list"></ul>
+    </div>
   </body>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -97,4 +102,255 @@
     const db = firebase.firestore();
   </script>
   <script src="index.js"></script>
+  <script>
+    // Auto Generate Songs Logic
+    async function getAvailableSongs() {
+      try {
+        // Define Christmas songs to exclude from auto-generation
+        const christmasSongs = [
+          "angels we have heard on high",
+          "away in a manger", 
+          "emmanuel hallowed ground",
+          "joy to the world",
+          "angels from the realms of glory",
+          "go tell it on the mountain"
+        ];
+
+        // Get all songs from the database
+        const songsSnapshot = await db.collection('songs').get();
+        const allSongs = songsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          name: doc.data().name || doc.id,
+          count: doc.data().count || 0
+        })).filter(song => 
+          // Exclude Christmas songs from auto-generation
+          !christmasSongs.includes(song.name.toLowerCase().trim())
+        );
+
+        // Get songs used in the last 6 weeks from formats collection
+        const sixWeeksAgo = new Date();
+        sixWeeksAgo.setDate(sixWeeksAgo.getDate() - 42);
+
+        const recentFormatsSnapshot = await db.collection('formats')
+          .where('date', '>=', sixWeeksAgo.toISOString().split('T')[0])
+          .get();
+
+        // Also check 'weeks' collection for recent usage
+        const recentWeeksSnapshot = await db.collection('weeks')
+          .where('date', '>=', firebase.firestore.Timestamp.fromDate(sixWeeksAgo))
+          .get();
+
+        // Collect all recently used songs
+        const recentlyUsedSongs = new Set();
+        
+        // Check formats collection
+        recentFormatsSnapshot.docs.forEach(doc => {
+          const formatData = doc.data();
+          if (formatData.songs && Array.isArray(formatData.songs)) {
+            formatData.songs.forEach(song => {
+              if (typeof song === 'string') {
+                recentlyUsedSongs.add(song.toLowerCase().trim());
+              } else if (song && song.name) {
+                recentlyUsedSongs.add(song.name.toLowerCase().trim());
+              }
+            });
+          }
+        });
+
+        // Check weeks collection
+        recentWeeksSnapshot.docs.forEach(doc => {
+          const weekData = doc.data();
+          if (weekData.songs && Array.isArray(weekData.songs)) {
+            weekData.songs.forEach(song => {
+              if (typeof song === 'string') {
+                recentlyUsedSongs.add(song.toLowerCase().trim());
+              } else if (song && song.name) {
+                recentlyUsedSongs.add(song.name.toLowerCase().trim());
+              }
+            });
+          }
+        });
+
+        // Filter out recently used songs
+        const availableSongs = allSongs.filter(song => 
+          !recentlyUsedSongs.has(song.name.toLowerCase().trim())
+        );
+
+        // Prioritize songs with lower counts (least used overall)
+        availableSongs.sort((a, b) => a.count - b.count);
+
+        return availableSongs;
+      } catch (error) {
+        console.error('Error fetching available songs:', error);
+        return [];
+      }
+    }
+
+    function getRandomSongs(songs, count = 5) {
+      const shuffled = [...songs].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, Math.min(count, shuffled.length));
+    }
+
+    async function autoGenerateSongs() {
+      try {
+        const availableSongs = await getAvailableSongs();
+        
+        if (availableSongs.length === 0) {
+          alert('No songs available that haven\'t been used in the last 6 weeks.');
+          return;
+        }
+
+        const selectedSongs = getRandomSongs(availableSongs, 5);
+        const songInputs = document.querySelectorAll('.song__input');
+
+        // Clear all inputs first
+        songInputs.forEach(input => input.value = '');
+
+        // Populate with selected songs
+        selectedSongs.forEach((song, index) => {
+          if (index < songInputs.length) {
+            songInputs[index].value = song.name;
+          }
+        });
+
+        console.log(`Generated ${selectedSongs.length} songs from ${availableSongs.length} available songs`);
+      } catch (error) {
+        console.error('Error auto-generating songs:', error);
+        alert('Error generating songs. Please try again.');
+      }
+    }
+
+    // Autocomplete functionality
+    let allSongsForAutocomplete = [];
+    let currentActiveInput = null;
+
+    async function loadSongsForAutocomplete() {
+      try {
+        const songsSnapshot = await db.collection('songs').get();
+        allSongsForAutocomplete = songsSnapshot.docs.map(doc => {
+          const songData = doc.data();
+          return songData.name || doc.id;
+        }).sort();
+        console.log('Loaded songs for autocomplete:', allSongsForAutocomplete.length);
+      } catch (error) {
+        console.error('Error loading songs for autocomplete:', error);
+      }
+    }
+
+    function setupAutocomplete() {
+      const songInputs = document.querySelectorAll('.song__input');
+      const dropdown = document.getElementById('autocomplete__dropdown');
+      const dropdownList = document.getElementById('autocomplete__list');
+
+      songInputs.forEach(input => {
+        input.addEventListener('input', function(e) {
+          currentActiveInput = this;
+          const query = this.value.toLowerCase().trim();
+          
+          if (query.length < 2) {
+            hideDropdown();
+            return;
+          }
+
+          const matches = allSongsForAutocomplete.filter(song => 
+            song.toLowerCase().includes(query)
+          ).slice(0, 5); // Limit to 5 suggestions
+
+          if (matches.length > 0) {
+            showDropdown(matches, this);
+          } else {
+            hideDropdown();
+          }
+        });
+
+        input.addEventListener('blur', function() {
+          // Delay hiding dropdown to allow clicking on suggestions
+          setTimeout(() => {
+            hideDropdown();
+          }, 200);
+        });
+
+        input.addEventListener('keydown', function(e) {
+          const dropdown = document.getElementById('autocomplete__dropdown');
+          const suggestions = dropdown.querySelectorAll('li');
+          const activeSuggestion = dropdown.querySelector('li.active');
+          let activeIndex = Array.from(suggestions).indexOf(activeSuggestion);
+
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            activeIndex = activeIndex < suggestions.length - 1 ? activeIndex + 1 : 0;
+            updateActiveSuggestion(suggestions, activeIndex);
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            activeIndex = activeIndex > 0 ? activeIndex - 1 : suggestions.length - 1;
+            updateActiveSuggestion(suggestions, activeIndex);
+          } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (activeSuggestion) {
+              selectSuggestion(activeSuggestion.textContent, this);
+            }
+          } else if (e.key === 'Escape') {
+            hideDropdown();
+          }
+        });
+      });
+    }
+
+    function showDropdown(matches, inputElement) {
+      const dropdown = document.getElementById('autocomplete__dropdown');
+      const dropdownList = document.getElementById('autocomplete__list');
+      
+      dropdownList.innerHTML = '';
+      
+      matches.forEach((song, index) => {
+        const li = document.createElement('li');
+        li.textContent = song;
+        li.className = index === 0 ? 'active' : '';
+        li.addEventListener('mousedown', function() {
+          selectSuggestion(song, inputElement);
+        });
+        li.addEventListener('mouseenter', function() {
+          updateActiveSuggestion(dropdownList.querySelectorAll('li'), index);
+        });
+        dropdownList.appendChild(li);
+      });
+
+      // Position dropdown below the input
+      const rect = inputElement.getBoundingClientRect();
+      dropdown.style.top = `${rect.bottom + window.scrollY}px`;
+      dropdown.style.left = `${rect.left + window.scrollX}px`;
+      dropdown.style.width = `${rect.width}px`;
+      dropdown.style.display = 'block';
+    }
+
+    function hideDropdown() {
+      const dropdown = document.getElementById('autocomplete__dropdown');
+      dropdown.style.display = 'none';
+    }
+
+    function updateActiveSuggestion(suggestions, activeIndex) {
+      suggestions.forEach((suggestion, index) => {
+        suggestion.className = index === activeIndex ? 'active' : '';
+      });
+    }
+
+    function selectSuggestion(song, inputElement) {
+      inputElement.value = song;
+      hideDropdown();
+      inputElement.focus();
+    }
+
+    // Add event listener to auto generate button
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Load songs for autocomplete
+      await loadSongsForAutocomplete();
+      setupAutocomplete();
+
+      const autoGenerateBtn = document.querySelector('.btn'); // First button is Auto Generate
+      if (autoGenerateBtn && autoGenerateBtn.textContent.trim() === 'Auto Generate') {
+        autoGenerateBtn.addEventListener('click', autoGenerateSongs);
+      }
+    });
+  </script>
+</body>
 </html>

@@ -27,6 +27,163 @@ document.addEventListener("DOMContentLoaded", function () {
   const songInputs = document.querySelectorAll(".song__input");
   const submitBtn = document.querySelectorAll(".btn")[1]; // Second button is "Submit"
 
+  // Autocomplete functionality
+  let allSongsForAutocomplete = [];
+  let currentActiveInput = null;
+
+  async function loadSongsForAutocomplete() {
+    try {
+      if (typeof db !== "undefined") {
+        const songsSnapshot = await db.collection("songs").get();
+        allSongsForAutocomplete = songsSnapshot.docs
+          .map((doc) => {
+            const songData = doc.data();
+            return songData.name || doc.id;
+          })
+          .sort();
+        console.log(
+          "Loaded songs for autocomplete:",
+          allSongsForAutocomplete.length
+        );
+      }
+    } catch (error) {
+      console.error("Error loading songs for autocomplete:", error);
+    }
+  }
+
+  function setupAutocomplete() {
+    // Create autocomplete dropdown if it doesn't exist
+    if (!document.getElementById("autocomplete__dropdown")) {
+      const dropdown = document.createElement("div");
+      dropdown.id = "autocomplete__dropdown";
+      dropdown.className = "autocomplete__dropdown";
+      dropdown.style.display = "none";
+      dropdown.innerHTML = '<ul id="autocomplete__list"></ul>';
+      document.body.appendChild(dropdown);
+    }
+
+    const songInputs = document.querySelectorAll(".song__input");
+    const dropdown = document.getElementById("autocomplete__dropdown");
+    const dropdownList = document.getElementById("autocomplete__list");
+
+    songInputs.forEach((input) => {
+      input.addEventListener("input", function (e) {
+        currentActiveInput = this;
+        const query = this.value.toLowerCase().trim();
+
+        if (query.length < 2) {
+          hideDropdown();
+          return;
+        }
+
+        const matches = allSongsForAutocomplete
+          .filter((song) => song.toLowerCase().includes(query))
+          .slice(0, 5);
+
+        if (matches.length > 0) {
+          showDropdown(matches, this);
+        } else {
+          hideDropdown();
+        }
+      });
+
+      input.addEventListener("blur", function () {
+        setTimeout(() => {
+          hideDropdown();
+        }, 200);
+      });
+
+      input.addEventListener("keydown", function (e) {
+        const dropdown = document.getElementById("autocomplete__dropdown");
+        const suggestions = dropdown.querySelectorAll("li");
+        const activeSuggestion = dropdown.querySelector("li.active");
+        let activeIndex = Array.from(suggestions).indexOf(activeSuggestion);
+
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          activeIndex =
+            activeIndex < suggestions.length - 1 ? activeIndex + 1 : 0;
+          updateActiveSuggestion(suggestions, activeIndex);
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          activeIndex =
+            activeIndex > 0 ? activeIndex - 1 : suggestions.length - 1;
+          updateActiveSuggestion(suggestions, activeIndex);
+        } else if (e.key === "Enter") {
+          e.preventDefault();
+          if (activeSuggestion) {
+            selectSuggestion(activeSuggestion.textContent, this);
+          }
+        } else if (e.key === "Escape") {
+          hideDropdown();
+        }
+      });
+    });
+  }
+
+  function showDropdown(matches, inputElement) {
+    const dropdown = document.getElementById("autocomplete__dropdown");
+    const dropdownList = document.getElementById("autocomplete__list");
+
+    dropdownList.innerHTML = "";
+
+    matches.forEach((song, index) => {
+      const li = document.createElement("li");
+      li.textContent = song;
+      li.className = index === 0 ? "active" : "";
+      li.addEventListener("mousedown", function () {
+        selectSuggestion(song, inputElement);
+      });
+      li.addEventListener("mouseenter", function () {
+        updateActiveSuggestion(dropdownList.querySelectorAll("li"), index);
+      });
+      dropdownList.appendChild(li);
+    });
+
+    const rect = inputElement.getBoundingClientRect();
+    dropdown.style.top = `${rect.bottom + window.scrollY}px`;
+    dropdown.style.left = `${rect.left + window.scrollX}px`;
+    dropdown.style.width = `${rect.width}px`;
+    dropdown.style.display = "block";
+  }
+
+  function hideDropdown() {
+    const dropdown = document.getElementById("autocomplete__dropdown");
+    if (dropdown) {
+      dropdown.style.display = "none";
+    }
+  }
+
+  function updateActiveSuggestion(suggestions, activeIndex) {
+    suggestions.forEach((suggestion, index) => {
+      suggestion.className = index === activeIndex ? "active" : "";
+    });
+  }
+
+  function selectSuggestion(song, inputElement) {
+    // Check if the current input has a date format and clean it
+    const currentValue = inputElement.value;
+    const hasDateFormat = /\(\d{1,2}\/\d{1,2}\/\d{2}\)|\(Never used\)/.test(
+      currentValue
+    );
+
+    if (hasDateFormat) {
+      // If auto-generated with date, preserve the song name but update with selected song
+      inputElement.value = song;
+    } else {
+      inputElement.value = song;
+    }
+
+    hideDropdown();
+    inputElement.focus();
+  }
+
+  // Initialize autocomplete when page loads
+  setTimeout(async () => {
+    await loadSongsForAutocomplete();
+    setupAutocomplete();
+  }, 1000); // Wait for Firebase to initialize
+
   // Calendar utility for date parsing and holiday calculation
   class DateParser {
     constructor(year) {
@@ -173,7 +330,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Month day patterns WITHOUT spaces (Nov17th, Jan6th, etc.)
       const monthDayNoSpacePattern =
-        /^(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec|january|february|march|april|june|july|august|september|october|november|december)(\d{1,2})(st|nd|rd|th)?$/i;
+        /^(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec|january|february|march|april|june|july|august|september|october|november|dec|december)(\d{1,2})(st|nd|rd|th)?$/i;
       const monthDayNoSpaceMatch = cleaned.match(monthDayNoSpacePattern);
 
       if (monthDayNoSpaceMatch) {
@@ -260,7 +417,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Month day patterns WITHOUT spaces
       const monthDayNoSpacePattern =
-        /^(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec|january|february|march|april|june|july|august|september|october|november|december)(\d{1,2})(st|nd|rd|th)?$/i;
+        /^(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec|january|february|march|april|june|july|august|september|october|november|dec|december)(\d{1,2})(st|nd|rd|th)?$/i;
       const monthDayNoSpaceMatch = cleaned.match(monthDayNoSpacePattern);
 
       if (monthDayNoSpaceMatch) {
@@ -355,7 +512,7 @@ document.addEventListener("DOMContentLoaded", function () {
       /^(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec|january|february|march|april|june|july|august|september|october|november|december)\s+(\d{1,2})(st|nd|rd|th)?/i,
       /^(\d{1,2})(st|nd|rd|th)?\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec|january|february|march|april|june|july|august|september|october|november|december)/i,
       // New patterns without spaces)
-      /^(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec|january|february|march|april|june|july|august|september|october|november|december)(\d{1,2})(st|nd|rd|th)?$/i,
+      /^(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec|january|february|march|april|june|july|august|september|october|november)(\d{1,2})(st|nd|rd|th)?$/i,
       /^(\d{1,2})(st|nd|rd|th)?(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec|january|february|march|april|june|july|august|september|october|november)$/i,
       // Standard numeric formats
       /(\d{1,2}\/\d{1,2}\/\d{4})/,
