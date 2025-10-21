@@ -450,6 +450,7 @@ nav {
    }
    .input__date {
      padding: 8px;
+     margin-top: 48px;
    }
    .song__input {
     font-size: 18px;
