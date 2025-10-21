@@ -449,7 +449,10 @@ nav {
     margin: 20px 0;
    }
    .input__date {
-     padding: 12px;
+     padding: 8px;
+   }
+   .song__input {
+    font-size: 18px;
    }
 }
 
