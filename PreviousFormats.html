@@ -10,7 +10,7 @@
   <body class="previous__formats">
     <div class="search__filter">
       <div class="search__bar">
-        <input class="search__text" type="text" />
+        <input class="search__text" type="text" placeholder="Search for songs"/>
       </div>
       <div class="sort__menu">
         <label for="sortMenu">Sort by:</label>
@@ -26,7 +26,7 @@
     document.addEventListener("DOMContentLoaded", async function () {
       const weeksContainer = document.getElementById("weeksContainer");
       if (!weeksContainer) return;
-
+         
       // Helper function to parse various date formats into a proper Date object
       function parseStoredDate(dateValue) {
         if (!dateValue) return new Date(0); // Very old date for null values
@@ -140,6 +140,100 @@
         weeksContainer.innerHTML = "<p>Error loading previous weeks.</p>";
         console.error("Error fetching weeks:", error);
       }
+            // ...existing code...
+      document.querySelector(".search__text").addEventListener('keyup', function (event) {
+        try {
+          const searchTerm = this.value.toLowerCase().trim();
+          const allWeekElements = document.querySelectorAll('.Previous__week');
+          
+          // If search is empty, show all weeks
+          if (searchTerm === '') {
+            allWeekElements.forEach(weekElement => {
+              weekElement.style.display = 'flex';
+            });
+            return;
+          }
+          
+          // Filter weeks based on search term
+          allWeekElements.forEach(weekElement => {
+            const songElements = weekElement.querySelectorAll('.number__order');
+            let foundMatch = false;
+            
+            // Check if any song in this week matches the search term
+            songElements.forEach(songElement => {
+              const songText = songElement.textContent.toLowerCase();
+              // Remove the number prefix (e.g., "1. ") to get just the song name
+              const songName = songText.replace(/^\d+\.\s*/, '');
+              
+              if (songName.includes(searchTerm)) {
+                foundMatch = true;
+              }
+            });
+            
+            // Show or hide the week based on whether a match was found
+            if (foundMatch) {
+              weekElement.style.display = 'flex';
+              
+              // Optionally highlight the matching text
+              songElements.forEach(songElement => {
+                const songText = songElement.textContent;
+                const songNamePart = songText.replace(/^(\d+\.\s*)/, '');
+                const numberPart = songText.match(/^(\d+\.\s*)/)?.[0] || '';
+                
+                if (songNamePart.toLowerCase().includes(searchTerm)) {
+                  // Create highlighted version
+                  const regex = new RegExp(`(${searchTerm})`, 'gi');
+                  const highlightedText = songNamePart.replace(regex, '<mark>$1</mark>');
+                  songElement.innerHTML = numberPart + highlightedText;
+                }
+              });
+            } else {
+              weekElement.style.display = 'none';
+            }
+          });
+          
+          // Show message if no results found
+          const visibleWeeks = document.querySelectorAll('.Previous__week[style*="flex"]');
+          const container = document.getElementById('weeksContainer');
+          let noResultsMessage = document.getElementById('no-results-message');
+          
+          if (visibleWeeks.length === 0 && searchTerm !== '') {
+            if (!noResultsMessage) {
+              noResultsMessage = document.createElement('p');
+              noResultsMessage.id = 'no-results-message';
+              noResultsMessage.style.textAlign = 'center';
+              noResultsMessage.style.fontSize = '18px';
+              noResultsMessage.style.color = '#666';
+              noResultsMessage.style.marginTop = '50px';
+              container.appendChild(noResultsMessage);
+            }
+            noResultsMessage.textContent = `No weeks found containing "${this.value}"`;
+            noResultsMessage.style.display = 'block';
+          } else {
+            if (noResultsMessage) {
+              noResultsMessage.style.display = 'none';
+            }
+          }
+          
+        } catch (error) {
+          console.error('Search error:', error);
+        }
+      });
+      
+      // Clear search functionality
+      document.querySelector(".search__text").addEventListener('input', function(event) {
+        // Remove highlights when search is cleared
+        if (this.value === '') {
+          const allSongElements = document.querySelectorAll('.number__order');
+          allSongElements.forEach(songElement => {
+            // Remove any HTML highlighting and restore original text
+            const originalText = songElement.textContent;
+            songElement.innerHTML = originalText;
+          });
+        }
+      });
+      
+      
     });
   </script>
 

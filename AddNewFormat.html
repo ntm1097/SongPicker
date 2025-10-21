@@ -12,7 +12,7 @@
   <body>
     <div class="container">
       <div class="new__format">
-        <input class="input__date" type="date" />
+        <input class="input__date" type="date" value=""/>
         <div class="song__list">
           <li>
             <input
@@ -113,7 +113,17 @@
           "emmanuel hallowed ground",
           "joy to the world",
           "angels from the realms of glory",
-          "go tell it on the mountain"
+          "go tell it on the mountain",
+          "o holy night",
+          "o come o come emmanuel", 
+          'he shall reign forevermore', 
+          "rejoice",
+          "the first noel", 
+          "silent night",
+          "what child is this",
+          "it came upon the midnight clear",
+          "o come all ye faithful", 
+          "o little town"
         ];
 
         // Get all songs from the database
@@ -129,7 +139,7 @@
 
         // Get songs used in the last 6 weeks from formats collection
         const sixWeeksAgo = new Date();
-        sixWeeksAgo.setDate(sixWeeksAgo.getDate() - 42);
+        sixWeeksAgo.setDate(sixWeeksAgo.getDate() - 56);
 
         const recentFormatsSnapshot = await db.collection('formats')
           .where('date', '>=', sixWeeksAgo.toISOString().split('T')[0])
