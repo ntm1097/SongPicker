@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Autocomplete functionality
   let allSongsForAutocomplete = [];
   let currentActiveInput = null;
-
+  
   async function loadSongsForAutocomplete() {
     try {
       if (typeof db !== "undefined") {

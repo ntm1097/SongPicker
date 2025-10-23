@@ -3,6 +3,7 @@
 body,
 html {
   scroll-behavior: none;
+  background-color: rgb(238, 245, 255);
 }
 
 * {
@@ -22,53 +23,70 @@ li {
 /* Navbar */
 
 nav {
-  background-color: rgb(0, 72, 132);
+ background: linear-gradient(to bottom, rgb(0, 117, 212), rgb(0, 24, 46));
 }
 
 .nav__wrapper {
   width: 100%;
   max-width: 1380px;
   display: flex;
-  padding: 20px;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
   margin: 0 auto;
+}
+
+.head__title{
+  margin: 0 50px;
+  color: white;
+  font-weight: 200;
+  font-size: 64px;
 }
 
 .logo {
   cursor: pointer;
-  box-shadow: 0px 4px 4px rgba(30, 30, 30, 0.559);
+  box-shadow: 0px 4px 8px rgba(30, 30, 30, 0.84);
   border-radius: 50px;
+  width: 80px;
+  transition: transform ease-in-out 0.3s;
 }
 
-.navlinks {
-  display: flex;
-  width: 100%;
-  max-width: 1380px;
-  justify-content: space-around;
-  align-items: center;
-  padding: 0 68px;
-  color: #ffffff;
+.logo:hover {
+  transform: scale(1.04)
 }
 
-.lists {
-  font-size: 28px;
-  cursor: pointer;
-  position: relative;
-  display: inline-block;
-  transition: color 0.4s ease;
+.format__functions{
+display: flex;
+justify-content: space-evenly;
+align-items: center;
+color: rgb(255, 255, 255);
+padding-bottom: 8px;
+}
+.list {
+font-weight: 200;
+font-size: 28px;
+cursor: pointer;
+transition: transform ease-in-out 0.3s;
 }
 
-.lists::after {
+.list:hover {
+  transform: scale(1.03);
+}
+
+
+
+.list::after {
   content: '';
   position: absolute;
-  bottom: -2px;
+  bottom: 0;
   left: 0;
   width: 0;
   height: 2px;
   background-color: #ffffff;
-  transition: width 0.4s ease;
+  transition: width 0.3s ease;
 }
 
-.lists:hover::after {
+.list:hover::after {
   width: 100%;
 }
 
@@ -85,7 +103,7 @@ nav {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 86px;
+  padding-top: 54px;
   margin: 0 auto;
   font-size: 32px;
   flex-wrap: wrap;
@@ -117,7 +135,7 @@ nav {
   width: 100%;
   max-width: 200px;
   font-size: 28px;
-  font-weight: 400;
+  font-weight: 300;
   margin: 0 auto;
 }
 
@@ -232,21 +250,121 @@ nav {
 
 .song__list {
   padding: 8px 20px 8px;
+  margin-top: 76px;
   width: 100%;
   max-width: 700px;
 }
 
 .input__date {
-  border-radius: 18px;
+  border-radius: 20px;
   outline: none;
   border: solid 2px rgb(112, 193, 206);
-  padding: 20px;
-  margin-top: 98px;
+  padding: 4px;
+  margin: 16px;
   font-size: 24px;
   text-align: center;
   cursor: pointer;
   transition: all ease 285ms;
+  background-color: inherit;
 }
+ 
+.calendar__popup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(0, 50%);
+  background: white;
+  border: 2px solid rgb(0, 72, 132);
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.324);
+  z-index: 1000;
+  width: 280px;
+  padding: 15px;
+  margin-top: 5px;
+}
+
+.calendar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.calendar__nav {
+  background: rgb(112, 193, 206);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+.calendar__nav:hover {
+  background: rgb(0, 72, 132);
+}
+
+#month__year {
+  font-weight: 600;
+  font-size: 16px;
+  color: rgb(0, 72, 132);
+}
+
+.calendar__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 10px;
+}
+
+.calendar__weekdays div {
+  text-align: center;
+  font-weight: 600;
+  color: rgb(0, 72, 132);
+  padding: 5px;
+  font-size: 12px;
+}
+
+.calendar__days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.calendar__day {
+  text-align: center;
+  padding: 8px 4px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.calendar__day:hover {
+  background: rgb(238, 245, 255);
+}
+
+.calendar__day.active {
+  background: rgb(112, 193, 206);
+  color: white;
+}
+
+.calendar__day.other-month {
+  color: #ccc;
+}
+
+.calendar__day.today {
+  background: rgb(0, 72, 132);
+  color: white;
+  font-weight: bold;
+}
+
+/* Position the calendar relative to input */
+.input__date {
+  position: relative;
+}
+
+/* ...existing code... */
 
 .input__date:hover {
   transform: scale(1.03);
@@ -254,7 +372,7 @@ nav {
 }
 
 .song__input {
-  padding: 10px 0;
+  padding: 8px 0;
   margin-bottom: 8px;
   width: 100%;
   border: none;
@@ -262,6 +380,7 @@ nav {
   outline: none;
   font-size: 24px;
   cursor: pointer;
+  background-color: inherit;
 }
 
 .song__list li::before {
@@ -302,8 +421,8 @@ nav {
   font-size: 20px;
   padding: 4px;
   width: 100%;
-  max-width: 200px;
-  margin: 0 16px;
+  max-width: 180px;
+  margin: 0 10px;
   cursor: pointer;
   transition: all ease 285ms;
 }
@@ -422,6 +541,13 @@ nav {
     font-size: 12px;
     padding: 0;
   }
+  .head__title {
+    font-size: 44px;
+    margin: 0 24px;
+  }
+  .list {
+    font-size: 20px;
+  }
   .most__used, .least__picked {
     margin: 0;
     width: 100%;
@@ -430,15 +556,18 @@ nav {
    .most__used, .least__picked {
     margin-bottom: 24px;
    }
+   .use__record {
+    padding-top: 44px;
+   }
    .record__title {
-    font-size: 22px;
+    font-size: 20px;
    }
    .Previous__week {
     width: 100%;
     max-width: 300px;
    }
    .number__order {
-    font-size: 16px;
+    font-size: 14px;
    }
    .search__filter {
     display: flex;
@@ -458,19 +587,23 @@ nav {
 }
 
 @media (max-width: 600px ) {
-  .lists {
-    font-size: 20px;
+  .head__title {
+    font-size: 38px;
+  }
+  .list {
+    font-size: 16px;
   }
   .logo {
     width: 65px;
   }
   .input__date {
     padding: 14px;
+    margin: 16px;
     font-size: 18px;
   }
   .song__list {
     max-width: 450px;
-    margin-top: 12px;
+    margin-top: 64px;
   }
   .song__input {
     font-size:  18px;
