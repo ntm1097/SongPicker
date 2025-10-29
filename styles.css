@@ -18,6 +18,7 @@ a,
 li {
   text-decoration: none;
   color: inherit;
+  position: relative;
 }
 
 /* Navbar */
@@ -195,7 +196,7 @@ transition: transform ease-in-out 0.3s;
   outline: none;
   font-size: 14px;
   transition: all ease-in-out 285ms;
-  box-shadow: 0px 0px 12px rgba(63, 63, 63, 0.169);
+  box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.132);
 
 }
 
@@ -407,11 +408,43 @@ transition: transform ease-in-out 0.3s;
   content: "5. ";
 }
 
+.check__box {
+  border: solid 1px rgb(0, 0, 0);
+  border-radius: 4px;
+  width: 1em;
+  height: 1em;
+  cursor: pointer;
+  transition: transform ease 250ms;
+  position: absolute;
+  top: 35%;
+  left: 95%;
+}
+
+.check__box:hover {
+  transform: scale(1.04);
+  border-color: rgb(0, 72, 132);
+}
+
 .buttons {
   display: flex;
   width: 100%;
   max-width: 500px;
   justify-content: center;
+}
+
+.submit__button{
+  background-color: inherit;
+  color: inherit;
+  border: 2px solid rgb(112, 193, 206);
+  border-radius: 20px;
+  padding: 8px;
+  position: absolute;
+  top: 80%;
+  left: 28%;
+}
+
+.submit__button:hover {
+  cursor: pointer;
 }
 
 .btn {
@@ -533,6 +566,23 @@ transition: transform ease-in-out 0.3s;
 
 .autocomplete__dropdown li.active {
   background-color: #e6f3ff;
+}
+
+/* Songdatabase */ 
+
+.database {
+  width: 100%;
+  max-width: 1400px;
+}
+
+.song__container{
+  border: 1px solid red;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: auto;
+  max-width: 1000px;
 }
 
 

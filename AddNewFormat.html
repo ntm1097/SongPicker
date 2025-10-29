@@ -19,6 +19,7 @@
               class="song__input"
               placeholder="Enter Song Here"
             />
+            <div class="check__box"></div>
           </li>
           <li>
             <input
@@ -26,6 +27,7 @@
               class="song__input"
               placeholder="Enter Song Here"
             />
+            <div class="check__box"></div>
           </li>
           <li>
             <input
@@ -33,6 +35,7 @@
               class="song__input"
               placeholder="Enter Song Here"
             />
+            <div class="check__box" onclick="handleCheckBoxClick(event)"></div>
           </li>
           <li>
             <input
@@ -40,6 +43,7 @@
               class="song__input"
               placeholder="Enter Song Here"
             />
+            <div class="check__box"></div>
           </li>
           <li>
             <input
@@ -47,6 +51,7 @@
               class="song__input"
               placeholder="Enter Song Here"
             />
+            <div class="check__box"></div>
           </li>
         </div>
                 <input class="input__date" type="text" placeholder="Select Date" readonly />
@@ -156,7 +161,7 @@
           !christmasSongs.includes(song.name.toLowerCase().trim())
         );
 
-        // Get songs used in the last 6 weeks from formats collection
+        // Get songs used in the last 8 weeks from formats collection
         const sixWeeksAgo = new Date();
         sixWeeksAgo.setDate(sixWeeksAgo.getDate() - 56);
 
@@ -220,6 +225,14 @@
       return shuffled.slice(0, Math.min(count, shuffled.length));
     }
 
+    function handleCheckBoxClick(event) {
+      const checkbox = event.target
+      checkbox.style.borderColor = "red";
+    }
+
+
+
+
     async function autoGenerateSongs() {
       try {
         const availableSongs = await getAvailableSongs();
@@ -232,8 +245,7 @@
         const selectedSongs = getRandomSongs(availableSongs, 5);
         const songInputs = document.querySelectorAll('.song__input');
 
-        // Clear all inputs first
-        songInputs.forEach(input => input.value = '');
+        
 
         // Populate with selected songs
         selectedSongs.forEach((song, index) => {
