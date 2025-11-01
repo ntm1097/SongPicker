@@ -251,22 +251,24 @@ transition: transform ease-in-out 0.3s;
 
 .song__list {
   padding: 8px 20px 8px;
-  margin-top: 76px;
+  margin-top: 56px;
   width: 100%;
   max-width: 700px;
 }
 
 .input__date {
-  border-radius: 20px;
+  border-radius: 14px;
   outline: none;
   border: solid 2px rgb(112, 193, 206);
-  padding: 4px;
-  margin: 16px;
-  font-size: 24px;
+  font-size: 20px;
   text-align: center;
   cursor: pointer;
   transition: all ease 285ms;
   background-color: inherit;
+  position: relative;
+  width: 100%;
+  max-width: 155px;
+  margin: 0 10px;
 }
  
 .calendar__popup {
@@ -360,16 +362,12 @@ transition: transform ease-in-out 0.3s;
   font-weight: bold;
 }
 
-/* Position the calendar relative to input */
-.input__date {
-  position: relative;
-}
-
-/* ...existing code... */
-
 .input__date:hover {
   transform: scale(1.03);
   border-color: rgb(0, 72, 132);
+}
+.input__date::placeholder {
+  color: #000;
 }
 
 .song__input {
@@ -430,21 +428,25 @@ transition: transform ease-in-out 0.3s;
   width: 100%;
   max-width: 500px;
   justify-content: center;
+  margin-top: 24px;
 }
 
-.submit__button{
+#submit__button{
   background-color: inherit;
   color: inherit;
   border: 2px solid rgb(112, 193, 206);
-  border-radius: 20px;
-  padding: 8px;
-  position: absolute;
-  top: 80%;
-  left: 28%;
+  width: 100%;
+  border-radius: 4px;
+  margin-top: 8px;
+  font-size: 20px;
+  max-width: 100px;
+  cursor: pointer;
+  transition: all ease-in-out 200ms;
 }
 
-.submit__button:hover {
-  cursor: pointer;
+#submit__button:hover {
+  border-color: rgb(0, 72, 132);
+  transform: scale(1.03);
 }
 
 .btn {
@@ -454,7 +456,7 @@ transition: transform ease-in-out 0.3s;
   font-size: 20px;
   padding: 4px;
   width: 100%;
-  max-width: 180px;
+  max-width: 150px;
   margin: 0 10px;
   cursor: pointer;
   transition: all ease 285ms;
@@ -627,10 +629,6 @@ transition: transform ease-in-out 0.3s;
    .search__text {
     margin: 20px 0;
    }
-   .input__date {
-     padding: 8px;
-     margin-top: 48px;
-   }
    .song__input {
     font-size: 18px;
    }
@@ -646,11 +644,6 @@ transition: transform ease-in-out 0.3s;
   .logo {
     width: 65px;
   }
-  .input__date {
-    padding: 14px;
-    margin: 16px;
-    font-size: 18px;
-  }
   .song__list {
     max-width: 450px;
     margin-top: 64px;
@@ -660,10 +653,14 @@ transition: transform ease-in-out 0.3s;
   }
   .buttons {
     margin-top: 24px;
+    max-width: 450px;
+  }
+  #submit__button {
+    font-size: 14px;
   }
   .btn {
-    padding: 8px;
-    font-size: 18px;
+    
+    font-size: 14px;
   }
   .search__filter {
     font-size: 14px;
@@ -708,11 +705,6 @@ transition: transform ease-in-out 0.3s;
   .song__list li::before {
     font-size: 14px;
     width: 1em;
-  }
-  .input__date {
-    margin: 0;
-    padding: 14px;
-    font-size: 14px;
   }
   .song__list {
     max-width: 450px;

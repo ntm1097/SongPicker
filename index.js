@@ -25,8 +25,7 @@ fetch("./components/navbar.html")
 document.addEventListener("DOMContentLoaded", function () {
   const dateInput = document.querySelector(".input__date");
   const songInputs = document.querySelectorAll(".song__input");
-  const submitBtn = document.querySelectorAll(".btn")[1]; // Second button is "Submit"
-
+  const submitBtn = document.getElementById("submit__button");
   // Autocomplete functionality
   let allSongsForAutocomplete = [];
   let currentActiveInput = null;

@@ -53,8 +53,10 @@
             />
             <div class="check__box"></div>
           </li>
+          <button id="submit__button">Submit</button>
         </div>
-                <input class="input__date" type="text" placeholder="Select Date" readonly />
+        <div class="buttons">
+          <input class="input__date btn" type="text" placeholder="Select Date" readonly />
         <div id="calendar__popup" class="calendar__popup" style="display: none;">
           <div class="calendar__header">
             <button id="prev__month" class="calendar__nav">&lt;</button>
@@ -71,19 +73,14 @@
             <div>Sat</div>
           </div>
           <div id="calendar__days" class="calendar__days">
-            <!-- Days will be populated by JavaScript -->
           </div>
         </div>
-        <div class="buttons">
-          <button class="btn">Auto Generate</button>
-          <button class="btn">Submit</button>
+          <button id="auto-generating" class="btn">Auto Generate</button>
           <input type="file" id="file__upload" accept=".xlsx,.xls,.docx,.doc" />
           <button id="upload__btn" class="btn">Upload File</button>
         </div>
       </div>
     </div>
-
-    <!-- Full-screen file preview overlay -->
     <div id="file__preview__overlay" class="file__preview__overlay" style="display: none;">
       <div class="file__preview__container">
         <div class="buttons">
@@ -97,13 +94,10 @@
         <div class="new__format">
           <input id="preview__date" class="input__date" type="date" readonly />
           <div class="song__list" id="preview__song__list">
-            <!-- Songs will be populated here -->
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Autocomplete dropdown container -->
     <div id="autocomplete__dropdown" class="autocomplete__dropdown" style="display: none;">
       <ul id="autocomplete__list"></ul>
     </div>
@@ -150,7 +144,6 @@
           "o little town"
         ];
 
-        // Get all songs from the database
         const songsSnapshot = await db.collection('songs').get();
         const allSongs = songsSnapshot.docs.map(doc => ({
           id: doc.id,
@@ -512,7 +505,7 @@
       await loadSongsForAutocomplete();
       setupAutocomplete();
 
-      const autoGenerateBtn = document.querySelector('.btn'); // First button is Auto Generate
+      const autoGenerateBtn = document.getElementById('auto-generating');
       if (autoGenerateBtn && autoGenerateBtn.textContent.trim() === 'Auto Generate') {
         autoGenerateBtn.addEventListener('click', autoGenerateSongs);
       }
