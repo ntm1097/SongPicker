@@ -19,15 +19,7 @@
               class="song__input"
               placeholder="Enter Song Here"
             />
-            <div class="check__box"></div>
-          </li>
-          <li>
-            <input
-              type="text"
-              class="song__input"
-              placeholder="Enter Song Here"
-            />
-            <div class="check__box"></div>
+            <div class="check__box" onclick="handleCheckBoxClick(event)"></div>
           </li>
           <li>
             <input
@@ -43,7 +35,7 @@
               class="song__input"
               placeholder="Enter Song Here"
             />
-            <div class="check__box"></div>
+            <div class="check__box" onclick="handleCheckBoxClick(event)"></div>
           </li>
           <li>
             <input
@@ -51,7 +43,15 @@
               class="song__input"
               placeholder="Enter Song Here"
             />
-            <div class="check__box"></div>
+            <div class="check__box" onclick="handleCheckBoxClick(event)" ></div>
+          </li>
+          <li>
+            <input
+              type="text"
+              class="song__input"
+              placeholder="Enter Song Here"
+            />
+            <div class="check__box" onclick="handleCheckBoxClick(event)"></div>
           </li>
           <button id="submit__button">Submit</button>
         </div>
@@ -220,7 +220,7 @@
 
     function handleCheckBoxClick(event) {
       const checkbox = event.target
-      checkbox.style.borderColor = "red";
+      checkbox.classList.toggle('checked');
     }
 
 
@@ -237,6 +237,7 @@
 
         const selectedSongs = getRandomSongs(availableSongs, 5);
         const songInputs = document.querySelectorAll('.song__input');
+        const checkboxes = document.querySelectorAll('.check__box');
 
         
 
@@ -246,6 +247,11 @@
             songInputs[index].value = song.name;
           }
         });
+
+        checkboxes.forEach(checkbox => {
+      checkbox.classList.add('visible');
+    });
+
 
         console.log(`Generated ${selectedSongs.length} songs from ${availableSongs.length} available songs`);
       } catch (error) {

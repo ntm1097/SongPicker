@@ -416,6 +416,30 @@ transition: transform ease-in-out 0.3s;
   position: absolute;
   top: 35%;
   left: 95%;
+  display: none;
+}
+
+.check__box.visible {
+  display: block;
+}
+
+.checked{
+  background: linear-gradient(to bottom, rgb(92, 181, 255), rgb(7, 71, 135));
+  border: rgb(0, 0, 0);
+}
+
+.checked::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  width: 0.3em;
+  height: 0.6em;
+  border: 2px solid white;
+  border-top: none;
+  border-left: none;
+  display: block;
 }
 
 .check__box:hover {
