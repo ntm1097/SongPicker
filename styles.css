@@ -393,6 +393,9 @@ transition: transform ease-in-out 0.3s;
   width: 100%;
   max-width: 600px;
   transition: all 250ms ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .song:hover {
@@ -665,6 +668,9 @@ transition: transform ease-in-out 0.3s;
     max-width: 450px;
     margin-top: 64px;
   }
+  .new__format {
+    margin: 0 auto;
+  }
   .song__input {
     font-size:  18px;
   }
@@ -673,7 +679,7 @@ transition: transform ease-in-out 0.3s;
     max-width: 450px;
   }
   #submit__button {
-    font-size: 14px;
+    font-size: 18px;
   }
   .btn {
     
