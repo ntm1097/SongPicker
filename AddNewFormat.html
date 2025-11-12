@@ -245,21 +245,29 @@
         const songInputs = document.querySelectorAll('.song__input');
         const checkboxes = document.querySelectorAll('.check__box');
 
-        
+        // Populate with selected songs, skipping checked items
+        let songIndex = 0;
+        for (let i = 0; i < songInputs.length && songIndex < selectedSongs.length; i++) {
 
-        // Populate with selected songs
-        selectedSongs.forEach((song, index) => {
-          if (index < songInputs.length) {
-            songInputs[index].value = song.name;
+          if (checkboxes[i] && checkboxes[i].classList.contains('checked')) {
+            continue;
+          }
+          
+          songInputs[i].value = selectedSongs[songIndex].name;
+          songIndex++;
+        }
+
+        // Trigger checkbox visibility for populated inputs
+        songInputs.forEach((input, index) => {
+          if (input.value.trim() !== '') {
+            const correspondingCheckbox = checkboxes[index];
+            if (correspondingCheckbox) {
+              correspondingCheckbox.classList.add('visible');
+            }
           }
         });
 
-        checkboxes.forEach(checkbox => {
-      checkbox.classList.add('visible');
-    });
-
-
-        console.log(`Generated ${selectedSongs.length} songs from ${availableSongs.length} available songs`);
+        console.log(`Generated ${songIndex} songs from ${availableSongs.length} available songs`);
       } catch (error) {
         console.error('Error auto-generating songs:', error);
         alert('Error generating songs. Please try again.');
@@ -294,14 +302,12 @@
         renderCalendar();
       });
     
-      // Hide calendar when clicking outside
       document.addEventListener('click', function(e) {
         if (!calendarPopup.contains(e.target) && e.target !== dateInput) {
           calendarPopup.style.display = 'none';
         }
       });
     
-      // Navigation buttons
       prevMonthBtn.addEventListener('click', function() {
         currentDate.setMonth(currentDate.getMonth() - 1);
         renderCalendar();
@@ -316,20 +322,16 @@
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
         
-        // Update month/year display
         monthYearSpan.textContent = `${months[month]} ${year}`;
         
-        // Clear previous days
         calendarDays.innerHTML = '';
         
-        // Get first day of month and number of days
         const firstDay = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         const daysInPrevMonth = new Date(year, month, 0).getDate();
         
         const today = new Date();
         
-        // Add previous month's trailing days
         for (let i = firstDay - 1; i >= 0; i--) {
           const dayDiv = document.createElement('div');
           dayDiv.className = 'calendar__day other-month';

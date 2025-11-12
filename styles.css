@@ -137,7 +137,7 @@ transition: transform ease-in-out 0.3s;
   width: 100%;
   max-width: 200px;
   font-size: 28px;
-  font-weight: 300;
+  font-weight: 500;
   margin: 0 auto;
 }
 
@@ -195,7 +195,7 @@ transition: transform ease-in-out 0.3s;
   border: solid 1px rgba(110, 110, 110, 0.178);
   cursor: pointer;
   outline: none;
-  font-size: 14px;
+  font-size: 18px;
   transition: all ease-in-out 285ms;
   box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.132);
 
@@ -218,7 +218,7 @@ transition: transform ease-in-out 0.3s;
   padding: 24px;
   width: 100%;
   max-width: 330px;
-  min-height: 330px;
+  min-height: 360px;
   border: solid 2px rgb(0, 72, 132);
   border-radius: 12px;
   display: flex;
@@ -370,7 +370,7 @@ transition: transform ease-in-out 0.3s;
   padding: 8px 20px 8px;
   width: 100%;
   max-width: 800px;
-  margin-top: 44px;
+  margin-top: 34px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -382,12 +382,17 @@ transition: transform ease-in-out 0.3s;
   margin: 12px;
   width: 100%;
   border: none;
-  border: solid 1px rgb(0, 0, 0);
-  border-radius: 20px;
+  border: solid 2px rgb(112, 193, 206);
+  border-radius: 18px;
   outline: none;
   font-size: 24px;
   cursor: pointer;
-  background-color: inherit;
+  transition: all 250ms ease-in-out;
+  box-shadow: inset 0 0px 4px rgba(0, 0, 0, 0.3);
+}
+
+.song__input:hover{
+  border-color: rgb(7, 71, 135);
 }
 
 .song {
@@ -404,7 +409,7 @@ transition: transform ease-in-out 0.3s;
 }
 
 .check__box {
-  border: solid 1px rgb(0, 0, 0);
+  border: solid 2px rgb(7, 71, 135);
   border-radius: 4px;
   width: 1em;
   height: 1em;
@@ -412,7 +417,7 @@ transition: transform ease-in-out 0.3s;
   transition: transform ease 250ms;
   position: absolute;
   top: 40%;
-  left: 94%;
+  left: 93%;
   display: none;
 }
 
@@ -422,7 +427,7 @@ transition: transform ease-in-out 0.3s;
 
 .checked{
   background: linear-gradient(to bottom, rgb(92, 181, 255), rgb(7, 71, 135));
-  border: rgb(0, 0, 0);
+  border: none;
 }
 
 .checked::before {
@@ -449,7 +454,7 @@ transition: transform ease-in-out 0.3s;
   width: 100%;
   max-width: 500px;
   justify-content: center;
-  margin-top: 24px;
+  margin-top: 44px;
 }
 
 #submit__button{
@@ -458,7 +463,7 @@ transition: transform ease-in-out 0.3s;
   border: none;
   width: 100%;
   border-radius: 4px;
-  margin-top: 8px;
+  margin-top: 14px;
   font-size: 24px;
   max-width: 100px;
   cursor: pointer;
@@ -654,7 +659,7 @@ transition: transform ease-in-out 0.3s;
     padding: 24px;
    }
    .search__text {
-    margin: 20px 0;
+    margin: 0px 0 20px;
    }
    .song__input {
     font-size: 18px;
@@ -673,7 +678,8 @@ transition: transform ease-in-out 0.3s;
   }
   .song__list {
     max-width: 450px;
-    margin-top: 64px;
+    margin-top: 0px;
+    height: 80vh;
   }
   .new__format {
     margin: 0 auto;
@@ -687,10 +693,11 @@ transition: transform ease-in-out 0.3s;
   }
   #submit__button {
     font-size: 18px;
+    margin-top: 24px;
   }
   .btn {
     
-    font-size: 14px;
+    font-size: 16px;
   }
   .check__box{
     left: 90%;
@@ -702,6 +709,7 @@ transition: transform ease-in-out 0.3s;
   }
   .search__text {
     margin:  0 0 16px 0;
+    font-size: 14px;
   }
   .Previous__week {
     max-width: 230px;
@@ -744,13 +752,13 @@ transition: transform ease-in-out 0.3s;
   }
   .song__list {
     max-width: 450px;
-    margin-top: 32px;
+    height: 60vh;
   }
   .song__input {
     font-size:  14px;
   }
   .buttons {
-    margin-top: 44px;
+    margin-top: 0px;
   }
   .btn {
     padding: 8px;

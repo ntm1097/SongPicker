@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Autocomplete functionality
   let allSongsForAutocomplete = [];
   let currentActiveInput = null;
-  
+
   async function loadSongsForAutocomplete() {
     try {
       if (typeof db !== "undefined") {
@@ -49,6 +49,33 @@ document.addEventListener("DOMContentLoaded", function () {
       console.error("Error loading songs for autocomplete:", error);
     }
   }
+
+ function setupSongInputListeners() {
+  const songInputs = document.querySelectorAll('.song__input');
+  
+  songInputs.forEach((input, index) => {
+    input.addEventListener('input', function() {
+      const checkboxes = document.querySelectorAll('.check__box');
+      const correspondingCheckbox = checkboxes[index];
+      
+      if (correspondingCheckbox) {
+        correspondingCheckbox.classList.add('visible');
+      }
+    });
+    
+    input.addEventListener('blur', function() {
+      if (this.value.trim().length === 0) {
+        const checkboxes = document.querySelectorAll('.check__box');
+        const correspondingCheckbox = checkboxes[index];
+        
+        if (correspondingCheckbox) {
+          correspondingCheckbox.classList.remove('visible');
+        }
+      }
+    });
+  });
+}
+setupSongInputListeners()
 
   function setupAutocomplete() {
     // Create autocomplete dropdown if it doesn't exist
@@ -92,18 +119,21 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 200);
       });
 
+      
+
       input.addEventListener("keydown", function (e) {
         const dropdown = document.getElementById("autocomplete__dropdown");
         const suggestions = dropdown.querySelectorAll("li");
         const activeSuggestion = dropdown.querySelector("li.active");
         let activeIndex = Array.from(suggestions).indexOf(activeSuggestion);
-
+        
         if (e.key === "ArrowDown") {
           e.preventDefault();
           activeIndex =
             activeIndex < suggestions.length - 1 ? activeIndex + 1 : 0;
           updateActiveSuggestion(suggestions, activeIndex);
-        } else if (e.key === "ArrowUp") {
+        }
+         else if (e.key === "ArrowUp") {
           e.preventDefault();
           activeIndex =
             activeIndex > 0 ? activeIndex - 1 : suggestions.length - 1;
@@ -151,6 +181,14 @@ document.addEventListener("DOMContentLoaded", function () {
     if (dropdown) {
       dropdown.style.display = "none";
     }
+  }
+
+  function addCheckboxes() {
+    const checkboxes = document.querySelectorAll(".check__box");
+
+    checkboxes.forEach((checkbox) => {
+      checkbox.classList.add("visible");
+    });
   }
 
   function updateActiveSuggestion(suggestions, activeIndex) {
